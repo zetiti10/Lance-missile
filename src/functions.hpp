@@ -5,6 +5,7 @@
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
+#define STILL 4
 
 #define BASE 0
 #define ANGLE 1

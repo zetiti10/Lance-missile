@@ -44,17 +44,12 @@ void setup()
   pinMode(PIN_LAUNCHER_MOTOR_1, OUTPUT);
   pinMode(PIN_LAUNCHER_MOTOR_2, OUTPUT);
 
-  delay(50);
+  // Lancement des communications UART.
   Serial.begin(115200);
   Serial1.begin(115200);
-  Serial.print("begin");
-  Serial1.print("begin");
 
+  // Initialisation du lance missile : récupération de la position / recalibration si nécessaire.
   start();
-
-  delay(50);
-  Serial.print("ready");
-  Serial1.print("ready");
 }
 
 void loop()

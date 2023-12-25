@@ -95,7 +95,7 @@ void receivedData(UartClass *UART)
 
             if (BASE_ANGLE < 100)
                 messageToSend += '0';
-            
+
             messageToSend += BASE_ANGLE;
             messageToSend += ',';
 
@@ -110,7 +110,7 @@ void receivedData(UartClass *UART)
 
             if (ANGLE_ANGLE)
                 messageToSend += '0';
-            
+
             messageToSend += ANGLE_ANGLE;
         }
 
@@ -133,6 +133,22 @@ void receivedData(UartClass *UART)
 
             else
                 messageToSend += '0';
+        }
+
+        else if (receivedMessage.charAt(1) == '2')
+            messageToSend += '1';
+
+        else if (receivedMessage.charAt(1) == '3')
+        {
+            if (upCounter != 0) receivedMessage += UP;
+            else if (downCounter != 0) receivedMessage += DOWN;
+            else receivedMessage += STILL;
+
+            if (leftCounter != 0) receivedMessage += LEFT;
+            else if (rightCounter != 0) receivedMessage += RIGHT;
+            else receivedMessage += STILL;
+
+            messageToSend += missileToLaunch;
         }
 
         UART->println(messageToSend);
