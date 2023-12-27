@@ -17,7 +17,7 @@
 
 void receivedData(UartClass *UART)
 {
-    delay(25);
+    delay(UART_WAITING_TIME);
 
     String receivedMessage;
     while (UART->available() > 0)
@@ -25,8 +25,6 @@ void receivedData(UartClass *UART)
         char letter = UART->read();
         receivedMessage += letter;
     }
-
-    delay(25);
 
     if (receivedMessage.charAt(0) == '0' && receivedMessage.length() == 8)
     {
@@ -140,17 +138,47 @@ void receivedData(UartClass *UART)
 
         else if (receivedMessage.charAt(1) == '3')
         {
-            if (upCounter != 0) receivedMessage += UP;
-            else if (downCounter != 0) receivedMessage += DOWN;
-            else receivedMessage += STILL;
+            if (upCounter != 0)
+                receivedMessage += UP;
+            else if (downCounter != 0)
+                receivedMessage += DOWN;
+            else
+                receivedMessage += STILL;
 
-            if (leftCounter != 0) receivedMessage += LEFT;
-            else if (rightCounter != 0) receivedMessage += RIGHT;
-            else receivedMessage += STILL;
+            if (leftCounter != 0)
+                receivedMessage += LEFT;
+            else if (rightCounter != 0)
+                receivedMessage += RIGHT;
+            else
+                receivedMessage += STILL;
 
             messageToSend += missileToLaunch;
         }
 
-        UART->println(messageToSend);
+        UART->print(messageToSend);
     }
+}
+
+void checkMessageUART(UartClass *UART)
+{
+    if (!UART->available())
+        return;
+
+    delay(UART_WAITING_TIME);
+
+    String receivedMessage;
+    while (UART->available() > 0)
+    {
+        char letter = UART->read();
+        receivedMessage += letter;
+    }
+
+    if (receivedMessage == "52")
+        UART->print("0");
+}
+
+void checkMessages()
+{
+    checkMessageUART(&Serial);
+    checkMessageUART(&Serial1);
 }

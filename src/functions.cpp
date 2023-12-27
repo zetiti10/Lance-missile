@@ -9,6 +9,7 @@
 // Ajout des bibilothèques au programme.
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <remoteControl.hpp>
 
 // Autres fichiers du programme.
 #include "functions.hpp"
@@ -192,7 +193,7 @@ boolean checkLeft()
 {
     if (digitalRead(PIN_BASE_SENSOR_2) == 0)
     {
-        delay(5);
+        delay(1);
         if (digitalRead(PIN_BASE_SENSOR_2) == 0)
             return false;
     }
@@ -204,7 +205,7 @@ boolean checkRight()
 {
     if (digitalRead(PIN_BASE_SENSOR_1) == 0)
     {
-        delay(5);
+        delay(1);
         if (digitalRead(PIN_BASE_SENSOR_1) == 0)
             return false;
     }
@@ -215,64 +216,89 @@ boolean checkRight()
 void calibrate()
 {
     // Calibration de l'orientation de la base.
+    unsigned long initialTime = millis();
+
     // Retour à l'origine.
     startMotorMove(RIGHT);
 
     while (checkRight())
-        delay(1);
+        checkMessages();
 
     // Démarrage de la mesure.
-    unsigned long initialTime = millis();
+    unsigned long middleTime = millis();
 
     startMotorMove(LEFT);
 
     while (checkLeft())
-        delay(1);
+        checkMessages();
 
     unsigned long finalTime = millis();
-    baseAngle = 0;
     stopMotorMove(BASE);
 
     // Calcul de la vitesse angulaire.
-    unsigned long time = finalTime - initialTime;
+    unsigned long time = finalTime - middleTime;
     baseAngularFrequency = double(BASE_ANGLE) / double(time);
 
+    // Retour à la position initiale.
+    unsigned long moveTime = time - (middleTime - initialTime);
+
+    startMotorMove(RIGHT);
+
+    while (millis() - finalTime <= moveTime && checkRight())
+        checkMessages();
+
+    baseAngle = baseAngularFrequency * (millis() - finalTime);
+    stopMotorMove(BASE);
+
     // Calibration de l'inclinaison de la tête.
+    initialTime = millis();
+
+    // Retour à l'origine.
     startMotorMove(UP);
 
     while (digitalRead(PIN_ANGLE_SENSOR_1) == 1)
-        delay(1);
+        checkMessages();
 
     // Démarrage de la mesure.
-    initialTime = millis();
+    middleTime = millis();
 
     startMotorMove(DOWN);
 
     while (digitalRead(PIN_ANGLE_SENSOR_2) == 1)
-        delay(1);
+        checkMessages();
 
     finalTime = millis();
-    angleAngle = 0;
     stopMotorMove(ANGLE);
 
     // Calcul de la vitesse angulaire.
-    time = finalTime - initialTime;
+    time = finalTime - middleTime;
     angleAngularFrequency = double(ANGLE_ANGLE) / double(time);
 
+    // Retour à la position initiale.
+    moveTime = time - (middleTime - initialTime);
+
+    startMotorMove(UP);
+
+    while (millis() - finalTime <= moveTime && digitalRead(PIN_ANGLE_SENSOR_1) == 1)
+        checkMessages();
+
+    angleAngle = angleAngularFrequency * (millis() - finalTime);
+    stopMotorMove(BASE);
+
     // Enregistrement des vitesses angulaires dans la mémoire persistante.
-    EEPROM.write(0, baseAngularFrequency);
-    EEPROM.write(1, angleAngularFrequency);
+    EEPROM.write(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION, baseAngularFrequency);
+    EEPROM.write(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION, angleAngularFrequency);
 }
 
 void start()
 {
-    if (EEPROM.read(0) == 255 || EEPROM.read(1) == 255)
+    if (EEPROM.read(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION) == 255 || EEPROM.read(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION) == 255)
         calibrate();
 
     else
     {
-        baseAngularFrequency = EEPROM.read(0);
-        angleAngularFrequency = EEPROM.read(1);
+        baseAngularFrequency = EEPROM.read(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION);
+        angleAngularFrequency = EEPROM.read(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION);
 
         // Mesure de l'angle de la base.
         unsigned long initialTime = millis();
@@ -280,13 +306,23 @@ void start()
         startMotorMove(LEFT);
 
         while (checkLeft())
-            delay(1);
+            checkMessages();
 
         unsigned long finalTime = millis();
 
         stopMotorMove(BASE);
 
-        unsigned long baseTime = finalTime - initialTime;
+        unsigned long moveTime = finalTime - initialTime;
+
+        // Retour à l'angle initial.
+        startMotorMove(RIGHT);
+
+        while (millis() + finalTime <= moveTime && checkRight())
+            checkMessages();
+
+        stopMotorMove(BASE);
+
+        baseAngle = baseAngularFrequency * (millis() - finalTime);
 
         // Mesure de l'angle de l'inclinaison.
         initialTime = millis();
@@ -294,16 +330,23 @@ void start()
         startMotorMove(DOWN);
 
         while (digitalRead(PIN_ANGLE_SENSOR_2) == 1)
-            delay(1);
+            checkMessages();
 
         finalTime = millis();
 
         stopMotorMove(ANGLE);
 
-        unsigned long angleTime = finalTime - initialTime;
+        moveTime = finalTime - initialTime;
 
-        motorMoveTimer(RIGHT, baseAngle);
-        motorMoveTimer(UP, angleTime);
+        // Retour à l'angle initial.
+        startMotorMove(UP);
+
+        while (millis() + finalTime <= moveTime && digitalRead(PIN_ANGLE_SENSOR_1) == 1)
+            checkMessages();
+
+        stopMotorMove(ANGLE);
+
+        angleAngle = baseAngularFrequency * (millis() - finalTime);
     }
 }
 

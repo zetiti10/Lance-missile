@@ -2,5 +2,6 @@
 #define REMOTE_CONTROL_DEFINITIONS
 
 void receivedData(UartClass *UART);
+void checkMessages();
 
 #endif
