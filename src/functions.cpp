@@ -283,22 +283,22 @@ void calibrate()
         checkMessages();
 
     angleAngle = angleAngularFrequency * (millis() - finalTime);
-    stopMotorMove(BASE);
+    stopMotorMove(ANGLE);
 
     // Enregistrement des vitesses angulaires dans la mémoire persistante.
-    EEPROM.write(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION, baseAngularFrequency);
-    EEPROM.write(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION, angleAngularFrequency);
+    EEPROM.put(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION, angleAngularFrequency);
+    EEPROM.put(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION, baseAngularFrequency);
 }
 
 void start()
 {
-    if (EEPROM.read(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION) == 255 || EEPROM.read(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION) == 255)
+    if (isnan(EEPROM.read(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION)) || isnan(EEPROM.read(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION)))
         calibrate();
 
     else
     {
-        baseAngularFrequency = EEPROM.read(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION);
-        angleAngularFrequency = EEPROM.read(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION);
+        EEPROM.get(ANGLE_ANGULAR_FREQUENCY_STORAGE_LOCATION, angleAngularFrequency);
+        EEPROM.get(BASE_ANGULAR_FREQUENCY_STORAGE_LOCATION, baseAngularFrequency);
 
         // Mesure de l'angle de la base.
         unsigned long initialTime = millis();
@@ -317,7 +317,7 @@ void start()
         // Retour à l'angle initial.
         startMotorMove(RIGHT);
 
-        while (millis() + finalTime <= moveTime && checkRight())
+        while (millis() - finalTime <= moveTime && checkRight())
             checkMessages();
 
         stopMotorMove(BASE);
@@ -341,7 +341,7 @@ void start()
         // Retour à l'angle initial.
         startMotorMove(UP);
 
-        while (millis() + finalTime <= moveTime && digitalRead(PIN_ANGLE_SENSOR_1) == 1)
+        while (millis() - finalTime <= moveTime && digitalRead(PIN_ANGLE_SENSOR_1) == 1)
             checkMessages();
 
         stopMotorMove(ANGLE);
