@@ -23,6 +23,10 @@ void receivedData(UartClass *UART)
     while (UART->available() > 0)
     {
         char letter = UART->read();
+
+        if (letter == END_LINE_CHAR)
+            break;
+
         receivedMessage += letter;
     }
 
@@ -155,7 +159,7 @@ void receivedData(UartClass *UART)
             messageToSend += missileToLaunch;
         }
 
-        UART->print(messageToSend);
+        UART->print(messageToSend + END_LINE_CHAR);
     }
 }
 
@@ -170,11 +174,15 @@ void checkMessageUART(UartClass *UART)
     while (UART->available() > 0)
     {
         char letter = UART->read();
+
+        if (letter == END_LINE_CHAR)
+            break;
+
         receivedMessage += letter;
     }
 
     if (receivedMessage == "52")
-        UART->print("0");
+        UART->print("0" + END_LINE_CHAR);
 }
 
 void checkMessages()
