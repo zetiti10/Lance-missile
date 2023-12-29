@@ -51,7 +51,7 @@ Une fois l'initialisation terminée, le lance-missile est parfaitement opératio
 
 Le lance-missile est contrôlable de la même manière pour les deux moyens (USB et UART). Voici un tableau présentant le protocole utilisé pour effectuer des action et récupérer des informations :
 
-| Position | 0                                      | 1                                                         | Positions suivantes / valeurs retournées                                                                                                                                                                    |
+| Position | 0                                      | 1                                                         | Positions suivantes / valeurs retournées                                                                                                                            |
 | -------- | -------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |          | 0 : déplacer la tête pendant une durée | 0 : inclinaison vers le haut                              | 00001 à 99999 : temps en milliseconde                                                                                                                               |
 |          |                                        | 1 : inclinaison vers le bas                               | 00001 à 99999 : temps en milliseconde                                                                                                                               |
