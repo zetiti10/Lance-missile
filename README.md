@@ -10,6 +10,8 @@ Ce programme a été écrit en C++ pour l'Arduino Nano Every à l'aide de Platfo
 
 Le programme est terminé.
 
+Une bibliothèque Arduino est disponible sur [ce dépôt](https://github.com/zetiti10/Bibliotheque-Arduino-lance-missile), elle permet de contrôler le lance-missile aisément avec des méthodes pratiques.
+
 ## Modifications du lance-missile original
 
 Les moteurs et les capteurs du lance-missile ont été conservés, cependant, le reste de l'électrnoique a été retiré. Des connecteurs Dupont ont été mis pour rendre la maintenance plus facile.
