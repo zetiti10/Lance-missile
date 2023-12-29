@@ -26,39 +26,39 @@ double angleAngle;
 
 void setup()
 {
-  // Définition des modes des broches des capteurs.
-  pinMode(PIN_BASE_SENSOR_1, INPUT_PULLUP);
-  pinMode(PIN_BASE_SENSOR_2, INPUT_PULLUP);
-  pinMode(PIN_MISSILE_1_SENSOR, INPUT_PULLUP);
-  pinMode(PIN_MISSILE_2_SENSOR, INPUT_PULLUP);
-  pinMode(PIN_MISSILE_3_SENSOR, INPUT_PULLUP);
-  pinMode(PIN_LAUNCHER_MOTOR_SENSOR, INPUT_PULLUP);
-  pinMode(PIN_ANGLE_SENSOR_1, INPUT_PULLUP);
-  pinMode(PIN_ANGLE_SENSOR_2, INPUT_PULLUP);
+    // Définition des modes des broches des capteurs.
+    pinMode(PIN_BASE_SENSOR_1, INPUT_PULLUP);
+    pinMode(PIN_BASE_SENSOR_2, INPUT_PULLUP);
+    pinMode(PIN_MISSILE_1_SENSOR, INPUT_PULLUP);
+    pinMode(PIN_MISSILE_2_SENSOR, INPUT_PULLUP);
+    pinMode(PIN_MISSILE_3_SENSOR, INPUT_PULLUP);
+    pinMode(PIN_LAUNCHER_MOTOR_SENSOR, INPUT_PULLUP);
+    pinMode(PIN_ANGLE_SENSOR_1, INPUT_PULLUP);
+    pinMode(PIN_ANGLE_SENSOR_2, INPUT_PULLUP);
 
-  // Définition des modes des broches des actionneurs.
-  pinMode(PIN_BASE_MOTOR_1, OUTPUT);
-  pinMode(PIN_BASE_MOTOR_2, OUTPUT);
-  pinMode(PIN_ANGLE_MOTOR_1, OUTPUT);
-  pinMode(PIN_ANGLE_MOTOR_2, OUTPUT);
-  pinMode(PIN_LAUNCHER_MOTOR_1, OUTPUT);
-  pinMode(PIN_LAUNCHER_MOTOR_2, OUTPUT);
+    // Définition des modes des broches des actionneurs.
+    pinMode(PIN_BASE_MOTOR_1, OUTPUT);
+    pinMode(PIN_BASE_MOTOR_2, OUTPUT);
+    pinMode(PIN_ANGLE_MOTOR_1, OUTPUT);
+    pinMode(PIN_ANGLE_MOTOR_2, OUTPUT);
+    pinMode(PIN_LAUNCHER_MOTOR_1, OUTPUT);
+    pinMode(PIN_LAUNCHER_MOTOR_2, OUTPUT);
 
-  // Lancement des communications UART.
-  Serial.begin(BAUD_RATE);
-  Serial1.begin(BAUD_RATE);
+    // Lancement des communications UART.
+    Serial.begin(BAUD_RATE);
+    Serial1.begin(BAUD_RATE);
 
-  // Initialisation du lance missile : récupération de la position / recalibration si nécessaire.
-  start();
+    // Initialisation du lance missile : récupération de la position / recalibration si nécessaire.
+    start();
 }
 
 void loop()
 {
-  schedule();
+    schedule();
 
-  if (Serial.available())
-    receivedData(&Serial);
+    if (Serial.available())
+        receivedData(&Serial);
 
-  if (Serial1.available())
-    receivedData(&Serial1);
+    if (Serial1.available())
+        receivedData(&Serial1);
 }

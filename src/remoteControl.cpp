@@ -23,10 +23,14 @@ void receivedData(UartClass *UART)
     while (UART->available() > 0)
     {
         char letter = UART->read();
+
+        if (letter == END_LINE_CHAR)
+            break;
+
         receivedMessage += letter;
     }
 
-    if (receivedMessage.charAt(0) == '0' && receivedMessage.length() == 8)
+    if (receivedMessage.charAt(0) == '0' && receivedMessage.length() >= 7)
     {
         unsigned long time = 0;
         time += ((receivedMessage.charAt(2) - '0') * 10000);
@@ -38,7 +42,7 @@ void receivedData(UartClass *UART)
         motorMoveTimer(receivedMessage.charAt(1) - '0', time);
     }
 
-    else if (receivedMessage.charAt(0) == '1' && receivedMessage.length() == 7)
+    else if (receivedMessage.charAt(0) == '1' && receivedMessage.length() >= 6)
     {
         long angle = 0;
         angle += ((receivedMessage.charAt(3) - '0') * 100);
@@ -51,7 +55,7 @@ void receivedData(UartClass *UART)
         motorMoveRelative(receivedMessage.charAt(1) - '0', angle);
     }
 
-    else if (receivedMessage.charAt(0) == '2' && receivedMessage.length() == 6)
+    else if (receivedMessage.charAt(0) == '2' && receivedMessage.length() >= 5)
     {
         unsigned long angle = 0;
         angle += ((receivedMessage.charAt(2) - '0') * 100);
@@ -61,7 +65,7 @@ void receivedData(UartClass *UART)
         motorMoveAbsolute(receivedMessage.charAt(1) - '0', angle);
     }
 
-    else if (receivedMessage.charAt(0) == '3' && receivedMessage.length() == 4)
+    else if (receivedMessage.charAt(0) == '3' && receivedMessage.length() >= 3)
     {
         if (receivedMessage.charAt(1) == '0')
             startMotorMove(receivedMessage.charAt(2) - '0');
@@ -73,10 +77,10 @@ void receivedData(UartClass *UART)
             calibrate();
     }
 
-    else if (receivedMessage.charAt(0) == '4' && receivedMessage.length() == 3)
+    else if (receivedMessage.charAt(0) == '4' && receivedMessage.length() >= 2)
         missileLaunch(receivedMessage.charAt(1) - '0');
 
-    else if (receivedMessage.charAt(0) == '5' && receivedMessage.length() == 3)
+    else if (receivedMessage.charAt(0) == '5' && receivedMessage.length() >= 2)
     {
         String messageToSend = "";
 
@@ -155,7 +159,7 @@ void receivedData(UartClass *UART)
             messageToSend += missileToLaunch;
         }
 
-        UART->print(messageToSend);
+        UART->print(messageToSend + END_LINE_CHAR);
     }
 }
 
@@ -170,11 +174,15 @@ void checkMessageUART(UartClass *UART)
     while (UART->available() > 0)
     {
         char letter = UART->read();
+
+        if (letter == END_LINE_CHAR)
+            break;
+
         receivedMessage += letter;
     }
 
     if (receivedMessage == "52")
-        UART->print("0");
+        UART->print("0" + END_LINE_CHAR);
 }
 
 void checkMessages()
