@@ -15,21 +15,8 @@
 #include "pinDefinitions.hpp"
 #include "main.hpp"
 
-void receivedData(UartClass *UART)
+void processMessage(String receivedMessage, UartClass *UART)
 {
-    delay(UART_WAITING_TIME);
-
-    String receivedMessage;
-    while (UART->available() > 0)
-    {
-        char letter = UART->read();
-
-        if (letter == END_LINE_CHAR)
-            break;
-
-        receivedMessage += letter;
-    }
-
     if (receivedMessage.charAt(0) == '0' && receivedMessage.length() >= 7)
     {
         unsigned long time = 0;
@@ -159,8 +146,36 @@ void receivedData(UartClass *UART)
             messageToSend += missileToLaunch;
         }
 
-        UART->print(messageToSend + END_LINE_CHAR);
+        UART->println(messageToSend);
     }
+}
+
+void receivedData(UartClass *UART)
+{
+    delay(UART_WAITING_TIME);
+
+    String receivedMessage;
+    while (UART->available() > 0)
+    {
+        char letter = UART->read();
+
+        if (letter == '\r')
+            continue;
+
+        if (letter == '\n')
+        {
+            processMessage(receivedMessage, UART);
+            return;
+        }
+
+        receivedMessage += letter;
+    }
+}
+
+void startingProcessMessage(String receivedMessage, UartClass *UART)
+{
+    if (receivedMessage == "52")
+        UART->println("0");
 }
 
 void checkMessageUART(UartClass *UART)
@@ -175,14 +190,17 @@ void checkMessageUART(UartClass *UART)
     {
         char letter = UART->read();
 
-        if (letter == END_LINE_CHAR)
-            break;
+        if (letter == '\r')
+            continue;
+
+        if (letter == '\n')
+        {
+            startingProcessMessage(receivedMessage, UART);
+            return;
+        }
 
         receivedMessage += letter;
     }
-
-    if (receivedMessage == "52")
-        UART->print("0" + END_LINE_CHAR);
 }
 
 void checkMessages()

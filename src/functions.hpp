@@ -15,8 +15,8 @@
 
 #define MOTOR_POSITION_UPDATE_FREQUENCY 10
 
-// Temps d'attende lors de la réception d'un message : pour un message de 20 caractères, on a 20 x 8 = 160 bits. Le baud rate est de 115200, donc 160 / 115200 = 1,39 ms. On ajoute 1 ms pour la sécurité.
-#define UART_WAITING_TIME 160 / BAUD_RATE + 1
+// Temps d'attende lors de la réception d'un message : pour un message de 20 caractères, on a 20 x 8 = 160 bits. Le baud rate est de 115200, donc 160 / 115200 = 1,39 ms. On ajoute 10 ms pour la sécurité.
+#define UART_WAITING_TIME 160 / BAUD_RATE + 10
 
 extern unsigned long upCounter;
 extern unsigned long downCounter;
