@@ -52,12 +52,12 @@ void processMessage(String receivedMessage, UartClass *UART)
         motorMoveAbsolute(receivedMessage.charAt(1) - '0', angle);
     }
 
-    else if (receivedMessage.charAt(0) == '3' && receivedMessage.length() >= 3)
+    else if (receivedMessage.charAt(0) == '3' && receivedMessage.length() >= 2)
     {
-        if (receivedMessage.charAt(1) == '0')
+        if (receivedMessage.charAt(1) == '0' && receivedMessage.length() >= 3)
             startMotorMove(receivedMessage.charAt(2) - '0');
 
-        else if (receivedMessage.charAt(1) == '1')
+        else if (receivedMessage.charAt(1) == '1' && receivedMessage.length() >= 3)
             stopMotorMove(receivedMessage.charAt(2) - '0');
 
         else if (receivedMessage.charAt(1) == '2')
