@@ -13,6 +13,8 @@
 #include "main.hpp"
 #include "pinDefinitions.hpp"
 #include "functions.hpp"
+#include "scheduler.hpp"
+#include "remoteControl.hpp"
 
 void schedule()
 {
@@ -86,5 +88,27 @@ void schedule()
 
         digitalWrite(PIN_LAUNCHER_MOTOR_1, LOW);
         digitalWrite(PIN_LAUNCHER_MOTOR_2, LOW);
+    }
+
+    if (updateInterval != 0 && ((millis() - updateInterval) >= lastUpdateSendedTime))
+    {
+        if ((baseAngle != lastBaseAngleUpdateSended) || (angleAngle != lastAngleAngleUpdateSended))
+        {
+            processMessage("50", &Serial);
+            processMessage("50", &Serial1);
+
+            lastBaseAngleUpdateSended = baseAngle;
+            lastAngleAngleUpdateSended = angleAngle;
+        }
+
+        if (getMissilesState() != lastMissilesStateUpdateSended)
+        {
+            processMessage("51", &Serial);
+            processMessage("51", &Serial1);
+
+            lastMissilesStateUpdateSended = getMissilesState();
+        }
+
+        lastUpdateSendedTime = millis();
     }
 }

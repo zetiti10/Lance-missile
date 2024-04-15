@@ -348,6 +348,12 @@ void start()
 
         angleAngle = baseAngularFrequency * (millis() - finalTime);
     }
+
+    lastBaseAngleUpdateSended = baseAngle;
+    lastAngleAngleUpdateSended = angleAngle;
+    lastMissilesStateUpdateSended = getMissilesState();
+    lastUpdateSendedTime = 0;
+    updateInterval = 0;
 }
 
 int checkAvailableMissiles()
@@ -364,6 +370,31 @@ int checkAvailableMissiles()
         currentAvailableMissiles++;
 
     return currentAvailableMissiles;
+}
+
+String getMissilesState()
+{
+    String state;
+
+    if (digitalRead(PIN_MISSILE_1_SENSOR) == 0)
+        state += '1';
+
+    else
+        state += '0';
+
+    if (digitalRead(PIN_MISSILE_2_SENSOR) == 0)
+        state += '1';
+
+    else
+        state += '0';
+
+    if (digitalRead(PIN_MISSILE_3_SENSOR) == 0)
+        state += '1';
+
+    else
+        state += '0';
+
+    return state;
 }
 
 void missileLaunch(int number)

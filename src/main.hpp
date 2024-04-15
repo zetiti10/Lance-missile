@@ -10,5 +10,10 @@ extern double baseAngularFrequency;
 extern double angleAngularFrequency;
 extern double baseAngle;
 extern double angleAngle;
+extern double lastBaseAngleUpdateSended;
+extern double lastAngleAngleUpdateSended;
+extern String lastMissilesStateUpdateSended;
+unsigned long updateInterval;
+extern unsigned long lastUpdateSendedTime;
 
 #endif

@@ -33,6 +33,7 @@ void motorMoveAbsolute(int direction, int angle);
 void startMotorMove(int move);
 void stopMotorMove(int axis);
 int checkAvailableMissiles();
+String getMissilesState();
 void missileLaunch(int number);
 boolean checkLeft();
 boolean checkRight();

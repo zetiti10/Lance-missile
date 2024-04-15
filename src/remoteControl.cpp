@@ -105,23 +105,7 @@ void processMessage(String receivedMessage, UartClass *UART)
 
         else if (receivedMessage.charAt(1) == '1')
         {
-            if (digitalRead(PIN_MISSILE_1_SENSOR) == 0)
-                messageToSend += '1';
-
-            else
-                messageToSend += '0';
-
-            if (digitalRead(PIN_MISSILE_2_SENSOR) == 0)
-                messageToSend += '1';
-
-            else
-                messageToSend += '0';
-
-            if (digitalRead(PIN_MISSILE_3_SENSOR) == 0)
-                messageToSend += '1';
-
-            else
-                messageToSend += '0';
+            messageToSend += getMissilesState();
         }
 
         else if (receivedMessage.charAt(1) == '2')
@@ -131,15 +115,19 @@ void processMessage(String receivedMessage, UartClass *UART)
         {
             if (upCounter != 0)
                 receivedMessage += UP;
+
             else if (downCounter != 0)
                 receivedMessage += DOWN;
+
             else
                 receivedMessage += STILL;
 
             if (leftCounter != 0)
                 receivedMessage += LEFT;
+
             else if (rightCounter != 0)
                 receivedMessage += RIGHT;
+
             else
                 receivedMessage += STILL;
 
@@ -147,6 +135,21 @@ void processMessage(String receivedMessage, UartClass *UART)
         }
 
         UART->println(messageToSend);
+    }
+
+    else if (receivedMessage.charAt(0) == '6' && receivedMessage.length() >= 7)
+    {
+        if (receivedMessage.charAt(1) == '0')
+        {
+            unsigned long time = 0;
+            time += ((receivedMessage.charAt(2) - '0') * 10000);
+            time += ((receivedMessage.charAt(3) - '0') * 1000);
+            time += ((receivedMessage.charAt(4) - '0') * 100);
+            time += ((receivedMessage.charAt(5) - '0') * 10);
+            time += (receivedMessage.charAt(6) - '0');
+
+            updateInterval = time;
+        }
     }
 }
 

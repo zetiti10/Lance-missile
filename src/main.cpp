@@ -23,6 +23,13 @@ double angleAngularFrequency;
 // En degré.
 double baseAngle;
 double angleAngle;
+double lastBaseAngleUpdateSended;
+double lastAngleAngleUpdateSended;
+// Sous la forme 010.
+String lastMissilesStateUpdateSended;
+// En milliseconde.
+unsigned long updateInterval;
+unsigned long lastUpdateSendedTime;
 
 void setup()
 {
