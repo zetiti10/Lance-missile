@@ -13,7 +13,7 @@ extern double angleAngle;
 extern double lastBaseAngleUpdateSended;
 extern double lastAngleAngleUpdateSended;
 extern String lastMissilesStateUpdateSended;
-unsigned long updateInterval;
+extern unsigned long updateInterval;
 extern unsigned long lastUpdateSendedTime;
 
 #endif
