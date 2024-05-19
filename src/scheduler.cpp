@@ -76,7 +76,7 @@ void schedule()
             availableMissiles = currentAvailableMissiles;
 
             if (missileToLaunch == 0)
-                launcherCounter = millis() + 5500;
+                launcherCounter = millis() + 5000;
         }
 
         delay(100);
