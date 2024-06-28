@@ -179,6 +179,9 @@ void startingProcessMessage(String receivedMessage, UartClass *UART)
 {
     if (receivedMessage == "52")
         UART->println("0");
+
+    else if (receivedMessage == "54")
+        UART->println("1");
 }
 
 void checkMessageUART(UartClass *UART)
