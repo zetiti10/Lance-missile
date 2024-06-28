@@ -63,6 +63,18 @@ void schedule()
             angleAngle += angleAngularFrequency * MOTOR_POSITION_UPDATE_FREQUENCY;
 
         motorPositionCounter = millis() + MOTOR_POSITION_UPDATE_FREQUENCY;
+
+        if (baseAngle > BASE_ANGLE)
+            baseAngle = BASE_ANGLE;
+        
+        else if (baseAngle < 0)
+            baseAngle = 0;
+
+        if (angleAngle > ANGLE_ANGLE)
+            angleAngle = ANGLE_ANGLE;
+        
+        else if (angleAngle < 0)
+            angleAngle = 0;
     }
 
     if (missileToLaunch > 0)
