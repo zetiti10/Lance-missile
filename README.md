@@ -8,7 +8,7 @@ Ce programme permet la gestion complète d'un lance-missile. Il est exécuté pa
 Ce programme a été écrit en C++ pour l'Arduino Nano Every à l'aide de PlatformIO.
 
 > [!WARNING]
-> Les informations renseignées ici ne suffisent pas à reproduire le projet. Si vous êtes intéressés, vous pouvez me contacter par mail.
+> Les informations renseignées ici ne suffisent pas à reproduire le projet. Si vous êtes intéressés, vous pouvez me contacter.
 
 Une bibliothèque Arduino est disponible sur [ce dépôt](https://github.com/zetiti10/Bibliotheque-Arduino-lance-missile), elle permet de contrôler le lance-missile depuis un autre Arduino en UART.
 
